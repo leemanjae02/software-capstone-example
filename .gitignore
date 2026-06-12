@@ -1,0 +1,15 @@
+node_modules/
+.next/
+.env
+.env.local
+.env*.local
+*.tsbuildinfo
+
+# AI agent directories
+.omc/
+.claude/
+
+# Playwright
+.playwright-mcp/
+playwright-report/
+test-results/
