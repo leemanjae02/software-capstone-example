@@ -6,15 +6,15 @@
  * undici는 http/https 모듈을 우회해 TCP 소켓으로 직접 통신하기 때문에
  * msw/node의 인터셉터(http 모듈 패치)가 동작하지 않습니다.
  *
- * 해결책: 별도 Express 서버(port 3001)를 띄우고 절대 URL로 fetch합니다.
+ * 해결책: 별도 Express 서버(port 9090)를 띄우고 절대 URL로 fetch합니다.
  * Express는 Node.js http 모듈 기반이므로 정상 동작합니다.
  *
  * ── 실행 방법 ───────────────────────────────────────────────────────────────
- * npm run dev:full   →  Next.js(3000) + Express mock server(3001) 동시 실행
+ * npm run dev:full   →  Next.js(3000) + Express mock server(9090) 동시 실행
  * npm run mock       →  Express mock server만 실행
  *
  * ── 흐름 ────────────────────────────────────────────────────────────────────
- * 브라우저 → Next.js 서버(3000) → SSR 렌더링 중 fetch → Express mock(3001)
+ * 브라우저 → Next.js 서버(3000) → SSR 렌더링 중 fetch → Express mock(9090)
  *                                                        ↑ 여기서 가짜 응답
  */
 
@@ -25,7 +25,7 @@ type User = { id: string; name: string; email: string }
  * cache: 'no-store' — 매 요청마다 새로 fetch합니다 (캐시 비활성화).
  */
 async function getUsers(): Promise<User[]> {
-  const base = process.env.NEXT_PUBLIC_MOCK_API_URL ?? 'http://localhost:3001'
+  const base = process.env.NEXT_PUBLIC_MOCK_API_URL ?? 'http://localhost:9090'
   const res = await fetch(`${base}/api/users`, { cache: 'no-store' })
   if (!res.ok) throw new Error(`mock server 응답 오류: ${res.status}`)
   return res.json()
@@ -63,7 +63,7 @@ export default async function SSRTestPage() {
           <p className="text-sm mb-2">{error}</p>
           <p className="text-xs text-red-400">
             → <code>npm run mock</code> 또는 <code>npm run dev:full</code> 로
-            Express mock server(3001)를 먼저 실행해주세요.
+            Express mock server(9090)를 먼저 실행해주세요.
           </p>
         </div>
       ) : (
